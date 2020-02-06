@@ -50,8 +50,8 @@ async function main () {
   }
   let activeIp = await getActiveIp();
 
-  pool.query(`UPDATE public.ips SET is_active = true WHERE id = ${nextIp.id}`)
-  pool.query(`UPDATE public.ips SET is_active = false WHERE id = ${activeIp.id}`)
+  await pool.query(`UPDATE public.ips SET is_active = true WHERE id = ${nextIp.id}`)
+  await pool.query(`UPDATE public.ips SET is_active = false WHERE id = ${activeIp.id}`)
 
   let broadcast = nextIp.address.split('.');
   broadcast[3] = 255;
