@@ -56,7 +56,7 @@ async function main () {
 
   execSync('sudo ip addr flush dev eth0');
   execSync('sudo ip link set eth0 up');
-  execSync(`sudo ip addr add ${nextIp.address} broadcast ${broadcast} dev eth0`);
+  execSync(`sudo ip addr add ${nextIp.address}/24 broadcast ${broadcast} dev eth0`);
   execSync(`sudo ip route add default via ${nextIp.default_gateway}`);
 }
 
