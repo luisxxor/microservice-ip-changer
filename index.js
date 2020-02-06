@@ -24,7 +24,7 @@ async function getActiveIp() {
 
 async function getAllNonBannedIps() {
   const sql = `SELECT id, address, default_gateway, reverse_dns
-    FROM public.ips;`;
+    FROM public.ips ORDER BY id;`;
   let response = await pool.query(sql);
   return response.rows;
 }
@@ -48,6 +48,10 @@ async function main () {
     pool.end();
     return null;
   }
+  let activeIp = await getActiveIp();
+
+  pool.query(`UPDATE public.ips SET is_active = true WHERE id = ${nextIp.id}`)
+  pool.query(`UPDATE public.ips SET is_active = false WHERE id = ${activeIp.id}`)
 
   let broadcast = nextIp.address.split('.');
   broadcast[3] = 255;
