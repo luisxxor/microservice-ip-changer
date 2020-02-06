@@ -1,1 +1,1 @@
-babel-node --presets es2015 index.js > log.log
+npm start --prefix /opt/ipChanger/microservice-ip-changer/ > /opt/ipChanger/microservice/log.log
