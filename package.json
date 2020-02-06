@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node --presets env index.js"
+    "start": "babel-node --presets @babel/env index.js"
   },
   "author": "",
   "license": "ISC",
