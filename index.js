@@ -1,67 +1,46 @@
-// test pgconnection
 import { config } from 'dotenv';
-import { Pool, Client } from 'pg';
 import { execSync } from 'child_process';
+import { resolve } from 'path';
+import { existsSync, writeFileSync, readFileSync } from 'fs';
+
 config();
 
-const pool = new Pool();
+if(!existsSync(resolve('./currentIp'))) {
+  writeFileSync(resolve('./currentIp'), process.env.IPPOOL);
+} else {
+  // get current ip
+  let currentIp = readFileSync(resolve('./currentIp'), 'utf8');
 
-async function getActiveIp() {
-  const sql = 'SELECT * FROM public.ips WHERE is_active = true';
-  let response = await pool.query(sql);
-  return response.rows[0];
-}
+  // get the constant part of the ip
+  let fixedBlock = currentIp.split(':').slice(0,4);
 
-/*async function getAllNonBannedIps() {
-  const sql = `SELECT a.id id, address, default_gateway, reverse_dns
-    FROM public.ips a
-    LEFT OUTER JOIN public.ip_banned_by_scraping b
-    ON a.id = b.ip_id
-    WHERE b.ip_id IS NULL`;
-  let response = await pool.query(sql);
-  return response.rows;
-}*/
+  // get the variable part of the ip and parse to decimal
+  let range = parseInt(currentIp.split(':').slice(4,8).join(''), 16);
 
-async function getAllNonBannedIps() {
-  const sql = `SELECT id, address, default_gateway, reverse_dns
-    FROM public.ips ORDER BY id;`;
-  let response = await pool.query(sql);
-  return response.rows;
-}
+  // get the next ip
+  range++;
 
-async function getNextIp() {
-  let activeIp = await getActiveIp();
-  let ips = await getAllNonBannedIps();
-  if (ips.length > 1) {
-    let index = ips.findIndex(v => v.id === activeIp.id);
-    let nextIndex = index + 1 === ips.length ? 0 : index + 1;
-    return ips[nextIndex];
-  } else {
-    return null;
+  // convert the number to hex again
+  range = range.toString(16);
+
+  // fill with zeros
+  for (let i = range.length; i < 16; i++) {
+    range = "0"+range;
   }
-}
 
-async function main () {
-  let nextIp = await getNextIp();
-  if (nextIp === null) {
-    console.log(`Can't get the next ip`);
-    pool.end();
-    return null;
+  // declare the array to save the variable part
+  let rangeArr = [];
+
+  // split again in array
+  for (let i = 0; i < 4; i++) {
+    rangeArr[i] = range.substr(i*4, 4);
   }
-  let activeIp = await getActiveIp();
 
-  await pool.query(`UPDATE public.ips SET is_active = true WHERE id = ${nextIp.id}`)
-  await pool.query(`UPDATE public.ips SET is_active = false WHERE id = ${activeIp.id}`)
+  let newIp = fixedBlock.concat(rangeArr).join(':');
 
-  let broadcast = nextIp.address.split('.');
-  broadcast[3] = 255;
-  broadcast = broadcast.join('.');
-  pool.end();
+  writeFileSync(resolve('./currentIp'), newIp);
 
-  execSync('sudo ip addr flush dev eth0');
-  execSync('sudo ip link set eth0 up');
-  execSync(`sudo ip addr add ${nextIp.address}/24 broadcast ${broadcast} dev eth0`);
-  execSync(`sudo ip route add default via ${nextIp.default_gateway}`);
+  execSync(`sudo ip a del ${currentIp}/128 dev eth0`);
+  execSync(`sudo ip a add ${newIp}/128 dev eth0`);
+
 }
-
-main();

@@ -13,6 +13,6 @@
     "@babel/node": "^7.8.4",
     "@babel/preset-env": "^7.8.4",
     "dotenv": "^8.2.0",
-    "pg": "^7.18.1"
+    "sqlite3": "^4.1.1"
   }
 }
