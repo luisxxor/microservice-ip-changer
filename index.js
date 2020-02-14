@@ -39,8 +39,10 @@ if(!existsSync(resolve('./currentIp'))) {
   let newIp = fixedBlock.concat(rangeArr).join(':');
 
   writeFileSync(resolve('./currentIp'), newIp);
+  currentIp = currentIp+'/128';
+  newIp = newIp+'/128';
 
-  execSync(`sudo ip a del ${currentIp}/128 dev eth0`);
-  execSync(`sudo ip a add ${newIp}/128 dev eth0`);
+  execSync(`sudo ip a del ${currentIp} dev eth0`);
+  execSync(`sudo ip a add ${newIp} dev eth0`);
 
 }
