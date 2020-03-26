@@ -1,4 +1,6 @@
 .env
 /node_modules
 *.log
-currentIp
+currentIPv4
+currentIPv6
+locationsExpressVPN
