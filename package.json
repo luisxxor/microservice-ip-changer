@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node --presets @babel/env index.js"
+    "ipv4": "babel-node --presets @babel/env ipv4.js",
+    "ipv6": "babel-node --presets @babel/env ipv6.js"
   },
   "author": "",
   "license": "ISC",

@@ -9,7 +9,7 @@ if(!existsSync(resolve('./currentIp'))) {
   writeFileSync(resolve('./currentIp'), process.env.IPPOOL);
 } else {
   // get current ip
-  let currentIp = readFileSync(resolve('./currentIp'), 'utf8');
+  let currentIp = readFileSync(resolve('./currentIPv6'), 'utf8');
 
   // get the constant part of the ip
   let fixedBlock = currentIp.split(':').slice(0,4);
@@ -42,7 +42,11 @@ if(!existsSync(resolve('./currentIp'))) {
   currentIp = currentIp+'/128';
   newIp = newIp+'/128';
 
-  execSync(`sudo ip a del ${currentIp} dev eth0`);
-  execSync(`sudo ip a add ${newIp} dev eth0`);
+  try {
+    execSync(`sudo ip a del ${currentIp} dev eth0`);
+    execSync(`sudo ip a add ${newIp} dev eth0`);
+  } catch (error) {
+    console.log(error)
+  }
 
 }
