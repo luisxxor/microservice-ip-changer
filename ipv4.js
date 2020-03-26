@@ -36,7 +36,7 @@ writeFileSync(currentIPv4File, currentIPv4);
 try {
 	execSync(`expressvpn disconnect`);
 } catch (error) {
-	console.log(error);
+	console.log(error.stderr);
 }
 
 try {
@@ -46,7 +46,7 @@ try {
 	writeFileSync(locationsFile, locations.join('\n'));
 	currentIPv4 = 0;
 	writeFileSync(currentIPv4File, currentIPv4);
-	console(error);
+	console.log(error.stderr);
 	console.log('Updated locations file and will try again in 15 minutes');
 }
 
