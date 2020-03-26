@@ -1,1 +1,1 @@
-npm start --prefix /opt/ipChanger/microservice-ip-changer/ > /opt/ipChanger/microservice-ip-changer/log.log
+npm run ipv6 --prefix /opt/ipChanger/microservice-ip-changer/ > /opt/ipChanger/microservice-ip-changer/log.log
