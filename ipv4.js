@@ -27,7 +27,7 @@ if (!existsSync(locationsFile)) {
 		currentIPv4 = 0;
 	} else {
 		currentIPv4 = parseInt(readFileSync(currentIPv4File));
-		currentIPv4 = currentIPv4 == locations.length - 1 ? 0 : currentIPv4 - 1;
+		currentIPv4 = currentIPv4 == locations.length - 1 ? 0 : currentIPv4 + 1;
 	}
 }
 
