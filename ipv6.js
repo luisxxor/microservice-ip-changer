@@ -39,12 +39,13 @@ if(!existsSync(resolve('./currentIPv6'))) {
   let newIp = fixedBlock.concat(rangeArr).join(':');
 
   writeFileSync(resolve('./currentIPv6'), newIp);
-  currentIp = currentIp+'/128';
-  newIp = newIp+'/128';
+  currentIp = currentIp;
+  newIp = newIp;
 
   try {
     execSync(`sudo ip a del ${currentIp} dev eth0`);
     execSync(`sudo ip a add ${newIp} dev eth0`);
+    console.log(newIp)
   } catch (error) {
     console.log(error)
   }
