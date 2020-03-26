@@ -5,8 +5,8 @@ import { existsSync, writeFileSync, readFileSync } from 'fs';
 
 config();
 
-if(!existsSync(resolve('./currentIp'))) {
-  writeFileSync(resolve('./currentIp'), process.env.IPPOOL);
+if(!existsSync(resolve('./currentIPv6'))) {
+  writeFileSync(resolve('./currentIPv6'), process.env.IPPOOL);
 } else {
   // get current ip
   let currentIp = readFileSync(resolve('./currentIPv6'), 'utf8');
@@ -38,7 +38,7 @@ if(!existsSync(resolve('./currentIp'))) {
 
   let newIp = fixedBlock.concat(rangeArr).join(':');
 
-  writeFileSync(resolve('./currentIp'), newIp);
+  writeFileSync(resolve('./currentIPv6'), newIp);
   currentIp = currentIp+'/128';
   newIp = newIp+'/128';
 
